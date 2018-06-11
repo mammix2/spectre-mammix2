@@ -4976,6 +4976,20 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pfrom->fDisconnect = true;
             return false;
         }
+		
+//		Future fork condition. Enforce minimum protcol version based on nTime.
+        if (nTime > Params().ForkTime()){
+            if (pfrom->nVersion < LEGACY_CUTOFF_MIN_PROTOCOL_VERSION)
+            {
+                // disconnect from peers older than this proto version
+                LogPrintf("Peer %s using obsolete version %i; disconnecting\n", pfrom->addr.ToString(), pfrom->nVersion);
+                pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE, strprintf("node < %d", LEGACY_CUTOFF_MIN_PROTOCOL_VERSION));
+                pfrom->fDisconnect = true;
+                return false;
+            }
+        }
+
+		
 
         if (nNodeMode != NT_FULL
             && !(pfrom->nServices & THIN_SUPPORT))
