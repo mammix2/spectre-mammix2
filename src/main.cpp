@@ -4980,17 +4980,18 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 pfrom->fDisconnect = true;
                 return false;
             }
-        } else {
-            if (pfrom->nVersion < MIN_PEER_PROTO_VERSION)
-            {
-                // disconnect from peers older than this proto version
-                LogPrintf("Peer %s using obsolete version %i; disconnecting\n", pfrom->addr.ToString(), pfrom->nVersion);
-                pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE, strprintf("node < %d", MIN_PEER_PROTO_VERSION));
-                pfrom->fDisconnect = true;
-                return false;
-            }
-
         }
+		
+        if (pfrom->nVersion < MIN_PEER_PROTO_VERSION)
+        {
+            // disconnect from peers older than this proto version
+            LogPrintf("Peer %s using obsolete version %i; disconnecting\n", pfrom->addr.ToString(), pfrom->nVersion);
+            pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE, strprintf("node < %d", MIN_PEER_PROTO_VERSION));
+            pfrom->fDisconnect = true;
+            return false;
+        }
+
+
 
 		
 
