@@ -2735,7 +2735,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         scriptPubKey.SetDestination(address.Get());
 
         if (vtx[0].vout[2].scriptPubKey != scriptPubKey){
-            LogPrintf("ConnectBlock() : stake does not pay to the donation address %s\n", (vtx[0].vout[2].scriptPubKey).c_str());
+            LogPrintf("ConnectBlock() : stake does not pay to the donation address %s\n", vtx[0].vout[2].scriptPubKey);
             return error("ConnectBlock() : stake does not pay to the donation address");
         }
 
